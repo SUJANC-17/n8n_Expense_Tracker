@@ -1,0 +1,538 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -544,
+        336
+      ],
+      "id": "bd5d9b54-47c1-495c-aecb-8c60c9a5d420",
+      "name": "Telegram Trigger",
+      "webhookId": "fcc46796-93f6-4cc7-8214-5688aba122df",
+      "credentials": {
+        "telegramApi": {
+          "id": "z1xAyVaBs2aAu7pO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        624,
+        256
+      ],
+      "id": "b467df10-438a-46a8-ad1f-a14f1266890e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "p8Bt00ccPoYSvgY8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Gk6aW_EVPii5EFxpgHYvk9uDx9cOXLqk6epYjmL3cEs",
+          "mode": "list",
+          "cachedResultName": "BudgetTracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gk6aW_EVPii5EFxpgHYvk9uDx9cOXLqk6epYjmL3cEs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $now.toFormat('MMMM') }} {{ $now.toFormat('yyyy') }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.text.split('\\n')[0].trim() }}",
+            "Expense Name": "={{ $json.text.split('\\n')[1].trim() }}",
+            "Category": "={{ $json.text.split('\\n')[2].trim() }}",
+            "Amount ₹": "={{ $json.text.split('\\n')[3].trim() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Expense Name",
+              "displayName": "Expense Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Amount ₹",
+              "displayName": "Amount ₹",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1152,
+        336
+      ],
+      "id": "43747f16-6ab4-428c-9976-304ec1868832",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "W67AclqfWACTl6N4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        560
+      ],
+      "id": "1454a30c-e5a5-400d-a63a-2b32e3becb27",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "p8Bt00ccPoYSvgY8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0d372e5e-701b-4b75-8362-fe10f5470def",
+              "leftValue": "={{ $json.text }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        336
+      ],
+      "id": "e3351566-5c5e-4f48-99e5-5d1ed37b4f8b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        624,
+        768
+      ],
+      "id": "0eb43854-5835-4880-b851-a2e306ac57f7",
+      "name": "Google Gemini Chat Model2",
+      "notesInFlow": false,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "p8Bt00ccPoYSvgY8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        928,
+        336
+      ],
+      "id": "75283c90-04ad-44ee-8c16-9a885c98d932",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a smart expense parser. Extract the following information from the text:\n1. Date in DD/MM/YYYY format\n2. Expense Name (the main item bought or spent on)\n3. Category (choose one from: Food, Shopping, Education, Travel, Health, Bills&Utilities, Entertainment)\n4. Amount (number only, no symbols)\n\nReply in the following exact format:\nDD/MM/YYYY\nExpense Name\nCategory\nAmount\n\nDo NOT add any labels, colons, explanations, or extra text. Just raw text lines.\nUse line breaks so each detail is on its own line."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        528,
+        32
+      ],
+      "id": "47642c62-d211-4e59-b0d3-e78f835f20fc",
+      "name": "True"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a smart expense parser. Extract the following information from the text: 1. Date in DD/MM/YYYY format 2. Expense Name (the main item bought or spent on) 3. Category (choose one from: Food, Shopping, Education, Travel, Health, Bills&Utilities, Entertainment) 4. Amount (number only, no symbols)  Reply in the following exact format: DD/MM/YYYY Expense Name Category Amount  Do NOT add any labels, colons, explanations, or extra text. Just raw text lines. Use line breaks so each detail is on its own line."
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "=You are an ultra-rigorous date extraction and validation system. Your singular objective is to determine with absolute certainty if the provided text contains an expression that can be resolved to a specific, calendrical point in time.\n\nCurrent Contextual Date: {{ $json.currentDate }} (Use this for all relative date calculations.)\n\nTask:\nExamine the input text for the presence of a date.\n\nDefinition of a \"Date\" for this task (MUST resolve to a specific calendar day, month, and/or year relative to the Current Contextual Date):\nA \"date\" is a temporal expression that allows for unambiguous resolution to a specific calendar date (even if the exact time of day is not specified). This includes:\n\nAbsolute Dates:\n\nFull calendar dates (e.g., \"July 21, 2025\", \"21/07/2025\", \"2025-07-21\", \"15th January 2023\").\n\nPartial but resolvable dates (e.g., \"January 2023\", \"the 15th of next month\", \"December 5th\" if a year is implied by context or system default).\n\nReferences to specific named days within a known calendar context (e.g., \"Christmas Day 2024\", \"New Year's Eve\").\n\nRelative Dates (that resolve to a specific day relative to the \"Current Contextual Date\"):\n\n\"today\", \"yesterday\", \"tomorrow\".\n\n\"next Monday\", \"last Tuesday\" (calculated based on the \"Current Contextual Date\").\n\n\"3 days ago\", \"in 2 weeks\", \"next year\" (these imply a specific date relative to the \"Current Contextual Date\").\n\n\"this morning\", \"tonight\", \"last night\" (these imply the \"Current Contextual Date\").\n\nExpressions that are NOT considered a \"Date\" for this task (should result in false):\nThese are general temporal references or durations that do not resolve to a specific, unique calendar day.\n\nDurations without a start/end date:\n\n\"for a week\", \"for three months\", \"two hours\", \"several years\".\n\n\"a long time ago\", \"in the near future\", \"soon\".\n\nAmbiguous or indefinite temporal phrases:\n\n\"sometime next week\", \"any day now\", \"at some point\", \"daily\", \"monthly\", \"annually\".\n\n\"the past\", \"the future\", \"in ancient times\".\n\nTime of day without an associated date:\n\n\"at 3 PM\", \"noon\", \"midnight\" (unless explicitly linked to \"today\", \"tomorrow\", etc., in which case the full phrase would be true).\n\nOutput:\n\nIf a date (as strictly defined above) is found, reply with true.\n\nIf no date is found (meaning only non-date temporal expressions are present, or no temporal expressions at all), reply with false.\n\nStrict Requirements:\n\nReply ONLY with true or false. No other words, explanations, or punctuation.\n\nThe system must demonstrate zero tolerance for ambiguity when returning true. If there's any doubt about resolvability to a specific calendar date based on the \"Current Contextual Date\", return false.\n\nAll relative date calculations must be performed using the \"Current Contextual Date\" provided."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        528,
+        544
+      ],
+      "id": "8e94824b-aa49-49e0-b7b8-98898a5f05d4",
+      "name": "False"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an ultra-absolute date extraction and validation system. Your singular objective is to determine with absolute certainty if the provided text contains an expression that refers to an explicit, absolute, and non-relative calendar point in time.\n\nTask:\nExamine the input text for the presence of a date.\n\nDefinition of a \"Date\" for this task (MUST be an explicit, absolute calendar reference to a specific day, month, and/or year):\nA \"date\" is a temporal expression that is fixed and does not rely on the \"current\" or \"contextual\" date for its resolution. This includes:\n\nAbsolute, Explicit Dates ONLY:\n\nFull calendar dates with day, month, and year clearly stated (e.g., \"July 21, 2025\", \"21/07/2025\", \"2025-07-21\", \"15th January 2023\").\n\nPartial but explicitly resolvable dates within a common calendar format, where the year is either present or unequivocally implied by the full context (e.g., \"January 2023\", \"December 5th, 1999\"). References like \"the 15th of next month\" are excluded unless the month and year are explicitly named.\n\nReferences to specific, named holidays or events that explicitly include a year (e.g., \"Christmas Day 2024\", \"New Year's Eve 2023\").\n\nExpressions that are NOT considered a \"Date\" for this task (should result in false):\nThese are any temporal references that are relative, ambiguous, or do not provide a full, explicit, and absolute calendar date. This list now explicitly includes terms that were previously considered \"Relative Dates.\"\n\nALL Relative Dates:\n\n\"today\", \"yesterday\", \"tomorrow\".\n\n\"next Monday\", \"last Tuesday\", \"this coming Friday\".\n\n\"3 days ago\", \"in 2 weeks\", \"next year\", \"last month\", \"this morning\", \"tonight\", \"last night\".\n\n\"the 15th of next month\", \"the 5th\".\n\nDurations without a start/end date:\n\n\"for a week\", \"for three months\", \"two hours\", \"several years\".\n\n\"a long time ago\", \"in the near future\", \"soon\".\n\nAmbiguous or indefinite temporal phrases:\n\n\"sometime next week\", \"any day now\", \"at some point\", \"daily\", \"monthly\", \"annually\".\n\n\"the past\", \"the future\", \"in ancient times\".\n\nTime of day without an associated explicit, absolute date:\n\n\"at 3 PM\", \"noon\", \"midnight\" (even if linked to \"today,\" \"tomorrow,\" etc., as those are now false).\n\nOutput:\n\nIf a date (as strictly and absolutely defined above) is found, reply with true.\n\nIf no such absolute date is found, reply with false.\n\nStrict Requirements:\n\nReply ONLY with true or false. No other words, explanations, or punctuation.\n\nThe system must demonstrate zero tolerance for any relativity or ambiguity when returning true. If the date relies on the current context or is not explicitly and absolutely stated, return false.\n\nPrioritize false if there is any deviation from the explicit absolute date definition.\n\nKey Changes and Why They Make It \"More Powerful\" for Your Specific Need:\n\n\"Ultra-absolute date extraction\": This rephrases the system's role to immediately signal the extreme strictness.\n\n\"Explicit, absolute, and non-relative calendar point in time\": This is the core, restrictive definition.\n\n\"MUST be an explicit, absolute calendar reference\": Reinforces the new, narrower definition.\n\n\"ALL Relative Dates\" moved to \"NOT considered a 'Date'\": This is the most crucial change. It directly addresses your requirement for \"yesterday,\" \"today,\" \"tomorrow\" to be false.\n\nRefined \"Partial but resolvable dates\": Emphasizes that even partial dates must have the year unequivocally present or implied from a full, absolute context, making \"the 15th of next month\" false.\n\n\"Zero tolerance for any relativity or ambiguity\": This is a powerful directive that pushes the model to be extremely conservative."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -320,
+        336
+      ],
+      "id": "4070638b-998a-4645-93ee-57be1ebb828d",
+      "name": "Date"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ Expense has been added successfully!{{ $('Merge1').item.json.text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1376,
+        336
+      ],
+      "id": "5f24e7e3-f955-4bce-9011-7f9244cfc8c4",
+      "name": "Send a text message",
+      "webhookId": "82a8126d-2f01-43da-9e92-fe2ffc5848d6",
+      "credentials": {
+        "telegramApi": {
+          "id": "z1xAyVaBs2aAu7pO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "months"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -544,
+        864
+      ],
+      "id": "a44faf7c-ef78-4fa9-b559-990fd64d9748",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "1Gk6aW_EVPii5EFxpgHYvk9uDx9cOXLqk6epYjmL3cEs",
+          "mode": "list",
+          "cachedResultName": "BudgetTracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gk6aW_EVPii5EFxpgHYvk9uDx9cOXLqk6epYjmL3cEs/edit?usp=drivesdk"
+        },
+        "title": "={{ $now.toFormat('MMMM') }} {{ $now.toFormat('yyyy') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -336,
+        864
+      ],
+      "id": "90877aa5-0077-4c9d-a726-cc875fdc2e0b",
+      "name": "Create sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "W67AclqfWACTl6N4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        208,
+        480
+      ],
+      "id": "7b8fdf0b-f1c3-4892-88cc-f4ff4c544f64",
+      "name": "Date & Time"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "True",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Date",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "True",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "False",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "True": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "False": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Date": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "False",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7101ed0-b865-46f0-8ea0-f1c1d5c4a2a2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7bd5b5421682b4f2ca65647b37b68767a8008b0a2c133751ff59f0bb074e48a7"
+  },
+  "id": "vCuQVAzZpgIfuB2M",
+  "tags": []
+}
